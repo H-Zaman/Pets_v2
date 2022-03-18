@@ -6,13 +6,15 @@ class SocialNews{
   final bool isBookMarked;
   final String title;
   final List<String> images;
+  final DateTime createdAt;
 
   SocialNews({
     required this.user,
     this.isLiked = false,
     this.isBookMarked = false,
     required this.title,
-    this.images = const []
+    this.images = const [],
+    required this.createdAt
   });
 
 }
