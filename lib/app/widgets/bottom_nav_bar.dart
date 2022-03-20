@@ -5,6 +5,7 @@ import 'package:pets/others/defauls.dart';
 
 class BottomNavBar extends StatelessWidget {
   static RxInt index = 0.obs;
+  static RxBool hide = false.obs;
 
   final IntCallback? onChanged;
   const BottomNavBar ({Key? key, this.onChanged}) : super(key: key);
@@ -20,36 +21,40 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Card(
-          elevation: 5,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1111)),
-          child: SizedBox(
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Obx(()=>AnimatedCrossFade(
+          firstChild: SizedBox(),
+          secondChild: Container(
+            width: Get.width * .4,
             height: 55,
-            width: Get.width * .55,
-            child: Obx(()=>Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _BottomNavButton(
-                  icon: BottomNavBar.index.value == 0 ? CupertinoIcons.house_fill : CupertinoIcons.house,
-                  selected: BottomNavBar.index.value == 0,
-                  onTap: () => onTap(0)
+                    icon: BottomNavBar.index.value == 0 ? CupertinoIcons.house_fill : CupertinoIcons.house,
+                    selected: BottomNavBar.index.value == 0,
+                    onTap: () => onTap(0)
                 ),
                 _BottomNavButton(
-                  icon: BottomNavBar.index.value == 1 ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                  selected: BottomNavBar.index.value == 1,
-                  onTap: () => onTap(1)
+                    icon: BottomNavBar.index.value == 1 ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                    selected: BottomNavBar.index.value == 1,
+                    onTap: () => onTap(1)
                 ),
                 _BottomNavButton(
-                  icon: BottomNavBar.index.value == 2 ? CupertinoIcons.person_alt : CupertinoIcons.person,
-                  selected: BottomNavBar.index.value == 2,
-                  onTap: () => onTap(2)
+                    icon: BottomNavBar.index.value == 2 ? CupertinoIcons.person_alt : CupertinoIcons.person,
+                    selected: BottomNavBar.index.value == 2,
+                    onTap: () => onTap(2)
                 ),
               ],
-            )),
+            ),
           ),
-        ),
+          crossFadeState: hide.value ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          duration: Duration(milliseconds: 300)
+        )),
       ),
     );
   }
@@ -57,7 +62,7 @@ class BottomNavBar extends StatelessWidget {
 
 
 class _BottomNavButton extends StatelessWidget {
-  final Function onTap;
+  final VoidCallback onTap;
   final IconData icon;
   final bool selected;
   const _BottomNavButton({
@@ -68,7 +73,7 @@ class _BottomNavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap as void Function()?,
+      onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(
           milliseconds: 200
@@ -76,8 +81,8 @@ class _BottomNavButton extends StatelessWidget {
         height: 42,
         width: 42,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(7),
-            color: selected ? const Color(0xff861E3F) : Colors.transparent
+          borderRadius: BorderRadius.circular(8),
+          color: selected ? const Color(0xff861E3F) : Colors.transparent
         ),
         child: Center(
           child: Icon(
